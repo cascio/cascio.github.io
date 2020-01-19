@@ -24,7 +24,4 @@ Here are some things that I'd like to write about in the future:
 
 ## Get In Touch
 
-That's it for this post. Who knows when I'll get back to writing again. Feel free to reach out on [Twitter](https://twitter.com/MCasiyo) or [LinkedIN](https://www.linkedin.com/in/mscascio/) if you'd like to chat about anything.
-
-Cheers,
-Michael
+That's it for this post. Who knows when I'll get back to writing again. Feel free to reach out on [Twitter](https://twitter.com/MCasiyo) or [LinkedIn](https://www.linkedin.com/in/mscascio/) if you'd like to chat about anything.
