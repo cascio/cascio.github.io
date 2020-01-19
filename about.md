@@ -1,6 +1,6 @@
 # About
 
-Hello! My name is Michael Cascio and I'm a Project Manager at SOM focusued on Research & Innovation type projects. I'm interested in ways of applying emerging technologies to the Architecture, Engineering, & Construction industry.
+Hello! My name is Michael Cascio and I'm a Project Manager at SOM focused on Research & Innovation type projects. I'm interested in ways of applying emerging technologies to the Architecture, Engineering, & Construction industry.
 
 I'm also on:
 - [Medium](https://medium.com/@michael.cascio)
