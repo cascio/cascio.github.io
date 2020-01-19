@@ -1,4 +1,7 @@
 # About
 
-This is where you put the contents of your *About* page. Like all your pages, it's in [Markdown](https://guides.github.com/features/mastering-markdown/) format.
+Hello! My name is Michael Cascio and I'm a Project Manager at SOM focusued on Research & Innovation type projects. I'm interested in ways of applying emerging technologies to the Architecture, Engineering, & Construction industry.
 
+I'm also on:
+- [Medium](https://medium.com/@michael.cascio)
+- [Twitter](https://twitter.com/MCasiyo)
