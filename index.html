@@ -39,12 +39,19 @@ h1{font-family:Fraunces,serif;font-weight:300;font-size:clamp(52px,10vw,148px);l
 h1 em{font-style:italic;color:var(--leaf)}
 p.lede{text-shadow:0 1px 18px rgba(20,34,25,.9),0 0 2px rgba(20,34,25,.6);max-width:34em;margin:22px 0 0;font-size:clamp(16px,1.6vw,19px);color:var(--cream);opacity:.9}
 .tune{position:fixed;left:max(5vw,20px);bottom:max(2vw,12px);z-index:3;font-size:14px}
-.tune summary{list-style:none;cursor:pointer;padding:10px 14px;border-radius:9999px;background:rgba(28,46,34,.7);
-  border:1px solid rgba(196,222,160,.3);backdrop-filter:blur(8px);color:var(--leaf);min-height:44px;display:flex;align-items:center}
-.tune summary::-webkit-details-marker{display:none}
-.tune summary:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
-.panel{margin-top:8px;width:min(300px,calc(100vw - 24px));padding:16px;border-radius:12px;background:rgba(28,46,34,.88);
-  border:1px solid rgba(196,222,160,.25);backdrop-filter:blur(10px);display:grid;gap:12px}
+.tune .opener,.tune .x{cursor:pointer;border-radius:9999px;background:rgba(28,46,34,.7);border:1px solid rgba(196,222,160,.3);
+  backdrop-filter:blur(8px);color:var(--leaf);min-height:44px;transition:opacity .35s ease,transform .35s ease}
+.tune .opener{padding:10px 14px;display:flex;align-items:center}
+.tune .x{position:absolute;left:0;bottom:0;width:44px;height:44px;padding:0;display:grid;place-items:center;font-size:22px;line-height:1}
+.tune .opener:focus-visible,.tune .x:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
+.tune.open .opener,.tune:not(.open) .x{opacity:0;transform:scale(.9);pointer-events:none;visibility:hidden}
+.tune.open .opener{position:absolute;left:0;bottom:0}
+.panel{position:absolute;left:0;bottom:56px;width:min(300px,calc(100vw - 24px));padding:16px;border-radius:12px;background:rgba(28,46,34,.88);
+  border:1px solid rgba(196,222,160,.25);backdrop-filter:blur(10px);display:grid;gap:12px;
+  transform-origin:bottom left;transition:opacity .35s ease,transform .35s ease}
+.tune:not(.open) .panel{opacity:0;transform:translateY(8px) scale(.97);pointer-events:none;visibility:hidden}
+.note:empty{display:none}
+@media(prefers-reduced-motion:reduce){.tune .opener,.tune .x,.panel{transition:none}}
 .panel label{display:grid;grid-template-columns:5.5em minmax(0,1fr) 3em;align-items:center;gap:8px;color:var(--cream)}
 .panel output{font-family:'DM Mono',monospace;font-size:13px;text-align:right;color:var(--sage)}
 input[type=range]{width:100%;accent-color:var(--leaf);height:28px}
@@ -141,17 +148,18 @@ body.work{overflow:auto}body.work header{position:absolute}body.work main{displa
     <div><h4>Investing</h4><p>Angel investor in the built environment, advanced materials, robotics, energy and financial infrastructure</p></div>
   </div>
 </section>
-<details class="tune">
-  <summary>Tune the painting</summary>
-  <div class="panel">
+<div class="tune" id="tune">
+  <button class="opener" id="tuneOpen" type="button" aria-expanded="false" aria-controls="tunePanel">Tune the painting</button>
+  <div class="panel" id="tunePanel" role="dialog" aria-label="Painting controls">
     <label>Speed <input id="speed" type="range" min="0" max="3" step="0.05" value="1"><output for="speed"></output></label>
     <label>Warp <input id="warp" type="range" min="0.5" max="6" step="0.1" value="3.2"><output for="warp"></output></label>
     <label>Scale <input id="scale" type="range" min="0.6" max="5" step="0.1" value="1.8"><output for="scale"></output></label>
     <label>Light <input id="light" type="range" min="-0.3" max="0.3" step="0.01" value="0.06"><output for="light"></output></label>
     <div class="row"><button id="regen" type="button">New variation</button><button id="copy" class="ghost" type="button">Copy settings</button></div>
-    <p class="note" id="msg">Preview of the home page backdrop. Nav links are placeholders.</p>
+    <p class="note" id="msg" aria-live="polite"></p>
   </div>
-</details>
+  <button class="x" id="tuneClose" type="button" aria-label="Close painting controls">&times;</button>
+</div>
 <script>
 {
 const cv=document.getElementById('c');
@@ -234,6 +242,10 @@ const out=id=>document.querySelector(`output[for=${id}]`);
 ['speed','warp','scale','light'].forEach(id=>{const el=document.getElementById(id);
   const set=()=>{S[id]=parseFloat(el.value);out(id).textContent=S[id].toFixed(id==='light'?2:1);};
   el.addEventListener('input',set);set();});
+const tune=document.getElementById('tune'),tOpen=document.getElementById('tuneOpen'),tClose=document.getElementById('tuneClose');
+const setTune=o=>{tune.classList.toggle('open',o);tOpen.setAttribute('aria-expanded',o);(o?tClose:tOpen).focus({preventScroll:true});};
+tOpen.addEventListener('click',()=>setTune(true));tClose.addEventListener('click',()=>setTune(false));
+addEventListener('keydown',e=>{if(e.key==='Escape'&&tune.classList.contains('open'))setTune(false);});
 document.getElementById('regen').addEventListener('click',()=>{S.seed=Math.random()*100;});
 document.getElementById('copy').addEventListener('click',async()=>{
   const txt=`speed ${S.speed}, warp ${S.warp}, scale ${S.scale}, light ${S.light}, seed ${S.seed.toFixed(2)}`;
