@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Michael Cascio</title>
+<meta name="description" content="Structural engineer turned startup operator and venture builder.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+/* VOICE: quiet, painterly, confident; a personal site that opens on one moving canvas.
+   IDEA: a living oil painting in the AECIN forest greens, after the spirit of generative shader paintings.
+   PICTURE: full-bleed domain-warped noise field, slow drift, faint grain.
+   COLOUR and TYPE: AECIN palette (forest #1C2E22 to cream #ECF3DE); Fraunces display, DM Sans text.
+   LAYOUT: canvas fills the screen; name bottom-left, nav top; tuning panel tucked bottom-right. */
+:root{color-scheme:dark;--deep:#1C2E22;--forest:#263E2F;--raised:#2F4A39;--accent:#2F5E43;--sage:#96B880;--leaf:#C4DEA0;--cream:#ECF3DE}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;background:var(--deep);color:var(--cream);font:16px/1.55 'DM Sans',system-ui,sans-serif;overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block;
+  background:radial-gradient(120% 90% at 30% 70%,var(--raised),var(--deep) 70%)}
+.shade{position:fixed;inset:0;pointer-events:none;transition:background 1.2s ease;
+  background:radial-gradient(75% 55% at 22% 46%,rgba(20,34,25,.78),rgba(20,34,25,.35) 55%,rgba(20,34,25,0) 85%),
+             linear-gradient(to bottom,rgba(20,34,25,.45),rgba(20,34,25,0) 18%),
+             linear-gradient(to top,rgba(20,34,25,.4),rgba(20,34,25,0) 22%)}
+header{position:fixed;top:0;left:0;right:0;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:22px max(5vw,20px)}
+.mark{font-family:Fraunces,serif;font-size:20px;letter-spacing:.01em;color:var(--cream);text-decoration:none}
+.mark{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .5s,transform .5s,visibility 0s .5s}
+body.work .mark{opacity:1;visibility:visible;transform:none;transition:opacity .5s,transform .5s,visibility 0s}
+@media(prefers-reduced-motion:reduce){.mark{transition:none!important}}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav a{color:var(--cream);text-decoration:none;padding:10px 12px;border-radius:9999px;font-size:15px;opacity:.86}
+nav a:hover,nav a:focus-visible{opacity:1;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px;outline:none}
+main{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;padding:96px max(5vw,20px) 13vh}
+h1{font-family:Fraunces,serif;font-weight:300;font-size:clamp(52px,10vw,148px);line-height:.98;margin:0;letter-spacing:-.02em;text-wrap:balance;
+  text-shadow:0 2px 40px rgba(20,34,25,.5)}
+h1 em{font-style:italic;color:var(--leaf)}
+p.lede{text-shadow:0 1px 18px rgba(20,34,25,.9),0 0 2px rgba(20,34,25,.6);max-width:34em;margin:22px 0 0;font-size:clamp(16px,1.6vw,19px);color:var(--cream);opacity:.9}
+.tune{position:fixed;left:max(5vw,20px);bottom:max(2vw,12px);z-index:3;font-size:14px}
+.tune summary{list-style:none;cursor:pointer;padding:10px 14px;border-radius:9999px;background:rgba(28,46,34,.7);
+  border:1px solid rgba(196,222,160,.3);backdrop-filter:blur(8px);color:var(--leaf);min-height:44px;display:flex;align-items:center}
+.tune summary::-webkit-details-marker{display:none}
+.tune summary:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
+.panel{margin-top:8px;width:min(300px,calc(100vw - 24px));padding:16px;border-radius:12px;background:rgba(28,46,34,.88);
+  border:1px solid rgba(196,222,160,.25);backdrop-filter:blur(10px);display:grid;gap:12px}
+.panel label{display:grid;grid-template-columns:5.5em minmax(0,1fr) 3em;align-items:center;gap:8px;color:var(--cream)}
+.panel output{font-family:'DM Mono',monospace;font-size:13px;text-align:right;color:var(--sage)}
+input[type=range]{width:100%;accent-color:var(--leaf);height:28px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+button{font:inherit;font-size:14px;color:var(--deep);background:var(--leaf);border:0;border-radius:9999px;padding:0 16px;min-height:40px;cursor:pointer}
+button.ghost{background:transparent;color:var(--leaf);border:1px solid rgba(196,222,160,.45)}
+button:focus-visible{outline:2px solid var(--cream);outline-offset:2px}
+.note{font-size:13px;color:var(--sage);margin:0}
+.shade.deep{background:rgba(20,34,25,.72);transition:background 1.2s ease}
+body.work{overflow:auto}body.work header{position:absolute}body.work main{display:none}
+#work{position:relative;z-index:2;max-width:1040px;margin:0 auto;padding:120px max(5vw,20px) 96px}
+#work h2{font-family:Fraunces,serif;font-weight:300;font-size:clamp(40px,6vw,64px);line-height:1.05;margin:0;letter-spacing:-.01em}
+#work .intro{max-width:40em;font-size:18px;margin:18px 0 0;opacity:.9}
+.figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:48px 0;background:rgba(196,222,160,.2);border:1px solid rgba(196,222,160,.2);border-radius:12px;overflow:hidden}
+.figs div{background:rgba(28,46,34,.82);padding:20px 18px}
+.figs b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:clamp(28px,3vw,34px);line-height:1.1;color:var(--leaf);white-space:nowrap}
+.figs span{font-size:14px;color:var(--cream);opacity:.8}
+.role{display:grid;grid-template-columns:10em minmax(0,1fr);gap:8px 32px;padding:32px 0;border-top:1px solid rgba(196,222,160,.22)}
+.role .when{font-family:'DM Mono',monospace;font-size:13px;color:var(--sage);padding-top:8px;white-space:nowrap}
+.role h3{font-family:Fraunces,serif;font-weight:400;font-size:26px;line-height:1.2;margin:0}
+.role h3 small{display:block;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--leaf);margin-top:4px}
+.role p{margin:10px 0 0;line-height:1.65;max-width:40em;opacity:.9}
+.role ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:10px;max-width:44em}
+.role li{padding-left:18px;position:relative;opacity:.9}
+.role li::before{content:"";position:absolute;left:0;top:.7em;width:7px;height:7px;border-radius:50%;background:var(--sage)}
+.creds{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:24px;padding-top:32px;border-top:1px solid rgba(196,222,160,.22)}
+.creds h4{font-family:Fraunces,serif;font-weight:400;font-size:20px;margin:0 0 8px;color:var(--leaf)}
+.creds p{margin:0;opacity:.88}
+@media(max-width:900px){.figs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.role{grid-template-columns:minmax(0,1fr)}.role .when{padding-top:0}}
+@media(max-width:600px){header{padding:16px 20px}nav a{padding:10px 8px}main{padding-bottom:16vh}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="fx-home" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="3"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="fx-work" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="7"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="fx-nav" x="-20%" y="-60%" width="140%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="5"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+</svg>
+<canvas id="c" aria-hidden="true"></canvas>
+<div class="shade"></div>
+<header>
+  <a class="mark" href="#home" data-view="home">Michael Cascio</a>
+  <nav aria-label="Main"><a href="#">About</a><a href="#work" data-view="work">Work</a><a href="#">Writing</a></nav>
+</header>
+<main>
+  <h1>Michael <em>Cascio</em></h1>
+  <p class="lede">Structural engineer turned startup operator and venture builder. Founding team at SOM IW after more than a decade at SOM, and an angel investor in the built environment, advanced materials, robotics and energy.</p>
+</main>
+<section id="work" hidden aria-labelledby="work-title">
+  <h2 id="work-title">Work</h2>
+  <p class="intro">Fifteen years at Skidmore, Owings &amp; Merrill, from engineering towers and train stations to building the firm's R&amp;D program and helping launch its corporate venture company.</p>
+  <div class="figs">
+    <div><b>40+</b><span>corporate venture initiatives</span></div>
+    <div><b>18+</b><span>revenue-producing products</span></div>
+    <div><b>14+</b><span>international patents managed</span></div>
+    <div><b>118+</b><span>R+I Special Projects</span></div>
+  </div>
+  <article class="role">
+    <div class="when">2023 – 2026</div>
+    <div><h3>Associate Director, Corporate Development &amp; Ventures<small>SOM IW · founding team</small></h3>
+      <p>SOM IW is the corporate venture company commercializing SOM's IP, technology and design.</p>
+      <ul>
+        <li>Co-developed the business case and supported the ownership-partner pitch that secured equity and bank financing to launch SOM IW as an independent company.</li>
+        <li>Ran financial planning, forecasting and reporting across 40+ venture initiatives, with the Director and CFO on board and investor updates.</li>
+        <li>Built venture sourcing and diligence, and led assessments across a pipeline of 9 prospective strategic equity investments.</li>
+        <li>Structured 3 startup equity investments and partnerships with 10+ industry leaders, producing 18+ revenue-generating products.</li>
+        <li>Led filing strategy for a 14+ patent portfolio: 5 new filings, 3 granted, 1 pending.</li>
+      </ul></div>
+  </article>
+  <article class="role">
+    <div class="when">2019 – 2023</div>
+    <div><h3>Associate, Research + Innovation<small>SOM · founding team of the firm-wide R&amp;D program</small></h3>
+      <ul>
+        <li>Set up R+I's processes, budgets and governance at its 2020 launch, and built its idea submission and review platform.</li>
+        <li>Fostered 500+ staff ideas and 118+ Special Projects on a $1.5M+ annual budget.</li>
+        <li>Managed the $500K+ yearly global exhibition budget, with shows in London, Venice, Milan, Hong Kong, Dubai, Paris and more.</li>
+        <li>Helped secure $600K+ in research grants, including NASA SBIR/STTR awards.</li>
+      </ul></div>
+  </article>
+  <article class="role">
+    <div class="when">2011 – 2018</div>
+    <div><h3>Structural Engineer<small>SOM · licensed PE, New York</small></h3>
+      <p>Engineered Manhattan West (~$4.5B construction value) and MiamiCentral Station (~$2B), growing from intern to licensed PE across steel, concrete, new construction and adaptive reuse.</p></div>
+  </article>
+  <article class="role">
+    <div class="when">2012 – 2019</div>
+    <div><h3>Founder<small>Dopecheddar · side project</small></h3>
+      <p>An independent electronic music discovery platform. Automated curation and distribution with Python, PostgreSQL and the SoundCloud, Tumblr and Twitter APIs, reaching 5,500+ listeners in 100+ countries.</p></div>
+  </article>
+  <div class="creds">
+    <div><h4>Education</h4><p>MEng and BEng, Civil Engineering, Stevens Institute of Technology</p></div>
+    <div><h4>Licenses</h4><p>Professional Engineer, New York State, since 2018</p></div>
+    <div><h4>Investing</h4><p>Angel investor in the built environment, advanced materials, robotics, energy and financial infrastructure</p></div>
+  </div>
+</section>
+<details class="tune">
+  <summary>Tune the painting</summary>
+  <div class="panel">
+    <label>Speed <input id="speed" type="range" min="0" max="3" step="0.05" value="1"><output for="speed"></output></label>
+    <label>Warp <input id="warp" type="range" min="0.5" max="6" step="0.1" value="3.2"><output for="warp"></output></label>
+    <label>Scale <input id="scale" type="range" min="0.6" max="5" step="0.1" value="1.8"><output for="scale"></output></label>
+    <label>Light <input id="light" type="range" min="-0.3" max="0.3" step="0.01" value="0.06"><output for="light"></output></label>
+    <div class="row"><button id="regen" type="button">New variation</button><button id="copy" class="ghost" type="button">Copy settings</button></div>
+    <p class="note" id="msg">Preview of the home page backdrop. Nav links are placeholders.</p>
+  </div>
+</details>
+<script>
+{
+const cv=document.getElementById('c');
+const gl=cv.getContext('webgl',{antialias:false,premultipliedAlpha:false});
+const P=['#1C2E22','#263E2F','#2F4A39','#2F5E43','#96B880','#C4DEA0','#ECF3DE'].map(h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)/255));
+const S={speed:1,warp:3.2,scale:1.8,light:0.06,seed:Math.random()*100};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+const fs=`precision highp float;
+uniform vec2 r;uniform float t,seed,warp,scale,light;uniform vec3 c[7];
+float h(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);
+ return mix(mix(h(i),h(i+vec2(1,0)),u.x),mix(h(i+vec2(0,1)),h(i+1.),u.x),u.y);}
+const mat2 R=mat2(.8,.6,-.6,.8);
+float fbm(vec2 p){float a=.5,s=0.;for(int i=0;i<6;i++){s+=a*n(p);p=R*p*2.03+1.7;a*=.5;}return s;}
+float ridge(vec2 p){float a=.5,s=0.;for(int i=0;i<5;i++){s+=a*(1.-abs(n(p)*2.-1.));p=R*p*2.1+3.1;a*=.5;}return s;}
+void main(){
+ vec2 uv=(gl_FragCoord.xy-.5*r)/min(r.x,r.y)*scale+seed;
+ float T=t*.035;
+ vec2 q=vec2(fbm(uv+vec2(0.,T)),fbm(uv+vec2(5.2,1.3)-T*.8));
+ vec2 s=vec2(fbm(uv+warp*q+vec2(1.7,9.2)+.6*T),fbm(uv+warp*q+vec2(8.3,2.8)-.5*T));
+ float f=fbm(uv+warp*s)+light;
+ float v=ridge(uv*.7+warp*.5*q+T*.3);
+ vec3 col=mix(c[0],c[1],smoothstep(.15,.5,f));
+ col=mix(col,c[2],smoothstep(.25,.75,length(q)-.2));
+ col=mix(col,c[3],smoothstep(.45,.85,s.x+.1*light));
+ col=mix(col,c[4],smoothstep(.55,.9,f*s.y*1.7));
+ col=mix(col,c[5],smoothstep(.72,.98,f*f*1.6+.25*q.y));
+ col=mix(col,c[6],pow(smoothstep(.78,1.02,f*1.15*s.x+.15+.1*v),2.));
+ col=mix(col,c[0],.35*smoothstep(.7,1.,v)*(1.-f));
+ vec2 e=gl_FragCoord.xy/r-.5;col*=1.-.35*dot(e,e);
+ col+=(h(gl_FragCoord.xy+fract(t*.37)*91.)-.5)*.03;
+ gl_FragColor=vec4(col,1.);
+}`;
+let draw=()=>{};
+if(gl){
+  const sh=(type,src)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))console.log(gl.getShaderInfoLog(s));return s;};
+  const pr=gl.createProgram();
+  gl.attachShader(pr,sh(gl.VERTEX_SHADER,'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
+  gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);gl.useProgram(pr);
+  gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  const U={};['r','t','seed','warp','scale','light'].forEach(k=>U[k]=gl.getUniformLocation(pr,k));
+  gl.uniform3fv(gl.getUniformLocation(pr,'c'),new Float32Array(P.flat()));
+  const resize=()=>{const d=Math.min(devicePixelRatio||1,1.5)*.75;
+    cv.width=Math.round(innerWidth*d);cv.height=Math.round(innerHeight*d);gl.viewport(0,0,cv.width,cv.height);};
+  const ro=new ResizeObserver(()=>{resize();if(reduce.matches)draw(clock);});ro.observe(document.body);resize();
+  let clock=20;
+  draw=tm=>{gl.uniform2f(U.r,cv.width,cv.height);gl.uniform1f(U.t,tm);gl.uniform1f(U.seed,S.seed);
+    gl.uniform1f(U.warp,S.warp);gl.uniform1f(U.scale,S.scale);gl.uniform1f(U.light,S.light);gl.drawArrays(gl.TRIANGLES,0,3);};
+  let last=performance.now();
+  const loop=now=>{const dt=Math.min(now-last,100)/1000;last=now;
+    if(!reduce.matches&&!document.hidden)clock+=dt*S.speed;draw(clock);requestAnimationFrame(loop);};
+  requestAnimationFrame(loop);
+}
+const shade=document.querySelector('.shade'),wk=document.getElementById('work');
+const views={home:document.querySelector('main'),work:wk};
+const swap=v=>{const w=v==='work';wk.hidden=!w;document.body.classList.toggle('work',w);shade.classList.toggle('deep',w);scrollTo(0,0);};
+/* dissolve: a view melts through warped noise (like the painting) as it fades */
+const hdr=document.querySelector('header');
+const melt=(v,from,to,dur)=>new Promise(done=>{const parts=[[views[v],'fx-'+v,110],[hdr,'fx-nav',40]];
+  parts.forEach(([,id])=>document.getElementById(id).querySelector('feTurbulence').setAttribute('seed',1+Math.floor(Math.random()*99)));
+  const t0=performance.now();const step=now=>{const k=Math.min((now-t0)/dur,1),e=k<.5?2*k*k:1-((-2*k+2)**2)/2,x=from+(to-from)*e;
+    for(const [el,id,amp] of parts){el.style.opacity=1-x;document.getElementById(id).querySelector('feDisplacementMap').setAttribute('scale',(x*amp).toFixed(1));
+      el.style.filter=x>.002?`url(#${id}) blur(${(x*4).toFixed(2)}px)`:'';}
+    if(k<1)requestAnimationFrame(step);else done();};requestAnimationFrame(step);});
+let cur=null,want=null,busy=false;
+const show=async v=>{want=v;if(busy)return;
+  if(cur===null||reduce.matches){cur=v;swap(v);for(const el of [...Object.values(views),hdr]){el.style.opacity='';el.style.filter='';}return;}
+  busy=true;
+  while(want!==cur){const next=want;
+    await melt(cur,0,1,750);swap(next);views[next].style.opacity=0;cur=next;await melt(next,1,0,1150);}
+  busy=false;};
+const route=()=>show(location.hash==='#work'?'work':'home');
+document.querySelectorAll('[data-view]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const v=a.dataset.view;show(v);
+  try{history.replaceState(null,'','#'+v);}catch(err){}}));
+addEventListener('hashchange',route);route();
+const out=id=>document.querySelector(`output[for=${id}]`);
+['speed','warp','scale','light'].forEach(id=>{const el=document.getElementById(id);
+  const set=()=>{S[id]=parseFloat(el.value);out(id).textContent=S[id].toFixed(id==='light'?2:1);};
+  el.addEventListener('input',set);set();});
+document.getElementById('regen').addEventListener('click',()=>{S.seed=Math.random()*100;});
+document.getElementById('copy').addEventListener('click',async()=>{
+  const txt=`speed ${S.speed}, warp ${S.warp}, scale ${S.scale}, light ${S.light}, seed ${S.seed.toFixed(2)}`;
+  const msg=document.getElementById('msg');
+  try{await navigator.clipboard.writeText(txt);msg.textContent='Copied: '+txt;}catch(e){msg.textContent=txt;}});
+}
+</script>
+</body>
+</html>

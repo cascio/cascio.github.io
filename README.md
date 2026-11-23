@@ -1,3 +1,3 @@
-# My Blog
+# cascio.github.io
 
-This is the repository for my blog! It was generated using [fastai/fast_template](https://github.com/fastai/fast_template). I might use this to write in the future.
+Personal website of Michael Cascio. A single static page (`index.html`) served by GitHub Pages, with a WebGL backdrop in the AECIN green palette. No build step: edit `index.html` and push.
