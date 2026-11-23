@@ -61,8 +61,15 @@ button.ghost{background:transparent;color:var(--leaf);border:1px solid rgba(196,
 button:focus-visible{outline:2px solid var(--cream);outline-offset:2px}
 .note{font-size:13px;color:var(--sage);margin:0}
 .shade.deep{background:rgba(20,34,25,.72);transition:background 1.2s ease}
-body.work{overflow:auto}body.work header{position:absolute}body.work main{display:none}
-#work{position:relative;z-index:2;max-width:1040px;margin:0 auto;padding:120px max(5vw,20px) 96px}
+body.work main{display:none}
+header{pointer-events:none}header a{pointer-events:auto}
+#work{position:fixed;inset:0;z-index:2;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:rgba(150,184,128,.7) transparent}
+#work::-webkit-scrollbar{width:10px;background:transparent}
+#work::-webkit-scrollbar-track{background:transparent}
+#work::-webkit-scrollbar-thumb{background:rgba(150,184,128,.6);border-radius:9999px;border:3px solid transparent;background-clip:padding-box}
+#work::-webkit-scrollbar-thumb:hover{background-color:rgba(196,222,160,.8)}
+#work .wrap{max-width:1040px;margin:0 auto;padding:120px max(5vw,20px) 96px}
 #work h2{font-family:Fraunces,serif;font-weight:300;font-size:clamp(40px,6vw,64px);line-height:1.05;margin:0;letter-spacing:-.01em}
 #work .intro{max-width:40em;font-size:18px;margin:18px 0 0;opacity:.9}
 .figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:48px 0;background:rgba(196,222,160,.2);border:1px solid rgba(196,222,160,.2);border-radius:12px;overflow:hidden}
@@ -101,7 +108,7 @@ body.work{overflow:auto}body.work header{position:absolute}body.work main{displa
   <h1>Michael <em>Cascio</em></h1>
   <p class="lede">Structural engineer turned startup operator and venture builder. Founding team at SOM IW after more than a decade at SOM, and an angel investor in the built environment, advanced materials, robotics and energy.</p>
 </main>
-<section id="work" hidden aria-labelledby="work-title">
+<section id="work" hidden aria-labelledby="work-title"><div class="wrap">
   <h2 id="work-title">Work</h2>
   <p class="intro">Fifteen years at Skidmore, Owings &amp; Merrill, from engineering towers and train stations to building the firm's R&amp;D program and helping launch its corporate venture company.</p>
   <div class="figs">
@@ -147,7 +154,7 @@ body.work{overflow:auto}body.work header{position:absolute}body.work main{displa
     <div><h4>Licenses</h4><p>Professional Engineer, New York State, since 2018</p></div>
     <div><h4>Investing</h4><p>Angel investor in the built environment, advanced materials, robotics, energy and financial infrastructure</p></div>
   </div>
-</section>
+</div></section>
 <div class="tune" id="tune">
   <button class="opener" id="tuneOpen" type="button" aria-expanded="false" aria-controls="tunePanel">Tune the painting</button>
   <div class="panel" id="tunePanel" role="dialog" aria-label="Painting controls">
@@ -217,10 +224,11 @@ if(gl){
   requestAnimationFrame(loop);
 }
 const shade=document.querySelector('.shade'),wk=document.getElementById('work');
-const views={home:document.querySelector('main'),work:wk};
-const swap=v=>{const w=v==='work';wk.hidden=!w;document.body.classList.toggle('work',w);shade.classList.toggle('deep',w);scrollTo(0,0);};
-/* dissolve: a view melts through warped noise (like the painting) as it fades */
 const hdr=document.querySelector('header');
+wk.addEventListener('scroll',()=>{hdr.style.transform=wk.scrollTop?`translateY(${-wk.scrollTop}px)`:'';},{passive:true});
+const views={home:document.querySelector('main'),work:wk};
+const swap=v=>{const w=v==='work';wk.hidden=!w;document.body.classList.toggle('work',w);shade.classList.toggle('deep',w);wk.scrollTop=0;hdr.style.transform='';};
+/* dissolve: a view melts through warped noise (like the painting) as it fades */
 const melt=(v,from,to,dur)=>new Promise(done=>{const parts=[[views[v],'fx-'+v,110],[hdr,'fx-nav',40]];
   parts.forEach(([,id])=>document.getElementById(id).querySelector('feTurbulence').setAttribute('seed',1+Math.floor(Math.random()*99)));
   const t0=performance.now();const step=now=>{const k=Math.min((now-t0)/dur,1),e=k<.5?2*k*k:1-((-2*k+2)**2)/2,x=from+(to-from)*e;
