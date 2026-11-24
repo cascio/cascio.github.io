@@ -228,12 +228,20 @@ if(gl){
 }
 const shade=document.querySelector('.shade'),wk=document.getElementById('work');
 const hdr=document.querySelector('header');
+/* Safari/iOS (WebKit) can leave text unpainted under SVG displacement filters: there, dissolve with blur and fade only */
+const webkit=/AppleWebKit/.test(navigator.userAgent)&&!/(Chrome|Chromium|Edg)\//.test(navigator.userAgent);
+const fx=(id,b)=>(webkit?'':`url(#${id}) `)+`blur(${b}px)`;
+/* load every face up front, so the Work page's fonts never arrive mid-dissolve */
+if(document.fonts){['300 16px Fraunces','italic 300 16px Fraunces','400 16px Fraunces','400 16px "DM Sans"','500 16px "DM Sans"','400 13px "DM Mono"']
+  .forEach(f=>document.fonts.load(f).catch(()=>{}));}
+const repaint=el=>{el.style.transform='translateZ(0)';requestAnimationFrame(()=>requestAnimationFrame(()=>{el.style.transform='';}));};
+if(document.fonts)document.fonts.ready.then(()=>repaint(wk));
 /* nav dissolves away while scrolling down the Work page, and back when scrolling up or near the top */
 const hin=document.querySelector('.hin'),sMap=document.querySelector('#fx-scroll feDisplacementMap');
 let lastY=0,navX=0,navT=0,navRAF=0;
 const paintNav=()=>{navX+=(navT-navX)*.12;if(Math.abs(navT-navX)<.004)navX=navT;
   hin.style.opacity=1-navX;sMap.setAttribute('scale',(navX*40).toFixed(1));
-  hin.style.filter=navX>.004?`url(#fx-scroll) blur(${(navX*4).toFixed(2)}px)`:'';hin.classList.toggle('gone',navX>.6);
+  hin.style.filter=navX>.004?fx('fx-scroll',(navX*4).toFixed(2)):'';hin.classList.toggle('gone',navX>.6);
   navRAF=navX!==navT?requestAnimationFrame(paintNav):0;};
 const setNav=t=>{if(reduce.matches){navX=t;navT=t;}navT=t;if(!navRAF)navRAF=requestAnimationFrame(paintNav);};
 wk.addEventListener('scroll',()=>{const y=wk.scrollTop,dy=y-lastY;lastY=y;
@@ -245,14 +253,14 @@ const melt=(v,from,to,dur)=>new Promise(done=>{const parts=[[views[v],'fx-'+v,11
   parts.forEach(([,id])=>document.getElementById(id).querySelector('feTurbulence').setAttribute('seed',1+Math.floor(Math.random()*99)));
   const t0=performance.now();const step=now=>{const k=Math.min((now-t0)/dur,1),e=k<.5?2*k*k:1-((-2*k+2)**2)/2,x=from+(to-from)*e;
     for(const [el,id,amp] of parts){el.style.opacity=1-x;document.getElementById(id).querySelector('feDisplacementMap').setAttribute('scale',(x*amp).toFixed(1));
-      el.style.filter=x>.002?`url(#${id}) blur(${(x*4).toFixed(2)}px)`:'';}
+      el.style.filter=x>.002?fx(id,(x*4).toFixed(2)):'';}
     if(k<1)requestAnimationFrame(step);else done();};requestAnimationFrame(step);});
 let cur=null,want=null,busy=false;
 const show=async v=>{want=v;if(busy)return;
   if(cur===null||reduce.matches){cur=v;swap(v);for(const el of [...Object.values(views),hdr]){el.style.opacity='';el.style.filter='';}return;}
   busy=true;
   while(want!==cur){const next=want;
-    await melt(cur,0,1,750);swap(next);views[next].style.opacity=0;cur=next;await melt(next,1,0,1150);}
+    await melt(cur,0,1,750);swap(next);views[next].style.opacity=0;cur=next;await melt(next,1,0,1150);repaint(views[next]);}
   busy=false;};
 const route=()=>show(location.hash==='#work'?'work':'home');
 document.querySelectorAll('[data-view]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const v=a.dataset.view;show(v);
