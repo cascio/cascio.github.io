@@ -216,12 +216,10 @@ body.work #copyHome,body.contact #copyHome{opacity:0;pointer-events:none}
 <section id="contact" hidden aria-labelledby="contact-title">
   <form class="cform" id="cform" novalidate>
     <h2 id="contact-title">Contact</h2>
-    <p class="intro">Have a project, a startup, or an idea at the edge of building and technology? Send a note.</p>
+    <p class="intro">Have a project, a startup, or an idea at the edge of building and technology? Write a note and it will open in your email app, ready to send.</p>
     <label>Name<input name="name" id="cf-name" autocomplete="name" required></label>
-    <label>Email<input name="email" id="cf-email" type="email" autocomplete="email" required></label>
     <label>Message<textarea name="message" id="cf-msg" rows="5" required></textarea></label>
-    <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
-    <div class="crow"><button type="submit" id="cf-send">Send message</button><p class="cstatus" id="cf-status" role="status"></p></div>
+    <div class="crow"><button type="submit" id="cf-send">Open in my email</button><p class="cstatus" id="cf-status" role="status"></p></div>
   </form>
 </section>
 <nav class="dots" aria-label="Work sections"></nav>
@@ -390,22 +388,17 @@ const route=()=>{const h=location.hash;show(h==='#experience'||h==='#work'?'work
 document.querySelectorAll('[data-view]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const v=a.dataset.view;show(v);
   try{history.replaceState(null,'','#'+(v==='work'?'experience':v));}catch(err){}}));
 addEventListener('hashchange',route);route();
-/* contact form: posts to FormSubmit, which emails the message on */
-const cf=document.getElementById('cform'),cfs=document.getElementById('cf-status'),cfb=document.getElementById('cf-send');
+/* contact form: composes the note in the visitor's own email app (mailto), so no third party handles it.
+   The address is assembled here rather than written out, to keep it away from simple scrapers. */
+const cf=document.getElementById('cform'),cfs=document.getElementById('cf-status');
+const to=['mscascio1','gmail.com'].join('@');
 cf.addEventListener('input',e=>{e.target.classList.remove('bad');if(cfs.textContent.startsWith('Please'))cfs.textContent='';});
-cf.addEventListener('submit',async e=>{e.preventDefault();
-  const f={name:cf.name.value.trim(),email:cf.email.value.trim(),message:cf.message.value.trim()};
-  const bad=[['cf-name',!f.name],['cf-email',!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email)],['cf-msg',!f.message]];
-  bad.forEach(([id,b])=>document.getElementById(id).classList.toggle('bad',b));
-  if(bad.some(([,b])=>b)){cfs.textContent='Please add your name, a valid email and a message.';return;}
-  if(cf._honey.value)return;
-  cfb.disabled=true;cfs.textContent='Sending…';
-  try{const r=await fetch('https://formsubmit.co/ajax/mscascio1@gmail.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},
-      body:JSON.stringify({...f,_subject:'New message from cascio.github.io',_replyto:f.email,_template:'table'})});
-    const j=await r.json().catch(()=>({}));if(!r.ok||j.success==='false'||j.success===false)throw new Error(j.message||('HTTP '+r.status));
-    cf.reset();cfs.textContent='Thanks, your message is on its way.';}
-  catch(err){cfs.textContent='Sorry, that didn’t send'+(err&&err.message?' ('+err.message+')':'')+'. Please try again in a moment.';}
-  cfb.disabled=false;});
+cf.addEventListener('submit',e=>{e.preventDefault();
+  const name=cf.name.value.trim(),msg=cf.message.value.trim();
+  document.getElementById('cf-name').classList.toggle('bad',!name);document.getElementById('cf-msg').classList.toggle('bad',!msg);
+  if(!name||!msg){cfs.textContent='Please add your name and a message.';return;}
+  location.href='mailto:'+to+'?subject='+encodeURIComponent('Hello from '+name+' via cascio.github.io')+'&body='+encodeURIComponent(msg+'\n\n— '+name);
+  cfs.textContent='Opening your email app… If nothing opens, write to '+to+'.';});
 const out=id=>document.querySelector(`output[for=${id}]`);
 ['speed','warp','scale','light'].forEach(id=>{const el=document.getElementById(id);
   const set=()=>{S[id]=parseFloat(el.value);out(id).textContent=S[id].toFixed(id==='light'?2:1);};
