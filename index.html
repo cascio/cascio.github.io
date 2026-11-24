@@ -31,8 +31,12 @@ header{position:fixed;top:0;left:0;right:0;z-index:4;display:flex;justify-conten
 .mark{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .5s,transform .5s,visibility 0s .5s}
 body.work .mark,body.contact .mark{opacity:1;visibility:visible;transform:none;transition:opacity .5s,transform .5s,visibility 0s}
 @media(prefers-reduced-motion:reduce){.mark{transition:none!important}}
-nav{display:flex;gap:6px;flex-wrap:nowrap;margin-left:auto}
+nav{display:flex;gap:6px;flex-wrap:nowrap;margin-left:auto;flex-shrink:0}nav a{flex-shrink:0;white-space:nowrap}
 nav a{color:var(--cream);text-decoration:none;padding:10px 12px;border-radius:9999px;font-size:17px;opacity:.86}
+nav a.li{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0 10px}
+nav a.li svg{display:block}
+@media(max-width:360px){.mark{font-size:20px!important}nav a{padding:10px 6px!important}nav a.li{min-width:36px;padding:0 8px!important}}
+nav a.li:hover,nav a.li:focus-visible{text-decoration:none}nav a.li:focus-visible{outline:1px solid var(--cream);outline-offset:-6px;border-radius:6px}
 nav a:hover,nav a:focus-visible{opacity:1;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px;outline:none}
 main{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;padding:96px max(5vw,20px) 13vh}
 h1{font-family:Fraunces,serif;font-weight:300;font-size:clamp(52px,10vw,148px);line-height:.98;margin:0;letter-spacing:-.02em;text-wrap:balance;
@@ -150,7 +154,7 @@ body.work #copyHome,body.contact #copyHome{opacity:0;pointer-events:none}
 <div class="shade"></div>
 <header><div class="hin">
   <a class="mark" href="#home" data-view="home">Michael <em>Cascio</em></a>
-  <nav aria-label="Main"><a href="#experience" data-view="work">Experience</a><a href="#contact" data-view="contact">Contact</a></nav>
+  <nav aria-label="Main"><a href="#experience" data-view="work">Experience</a><a href="#contact" data-view="contact">Contact</a><a class="li" href="https://www.linkedin.com/in/mscascio/" target="_blank" rel="noopener" aria-label="LinkedIn (opens in a new tab)" title="LinkedIn"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a></nav>
 </div></header>
 <main>
   <h1>Michael <em>Cascio</em></h1>
