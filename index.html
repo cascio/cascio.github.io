@@ -28,7 +28,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:4;display:flex;justify-conten
   padding:22px max(5vw,20px)}
 .mark{font-family:Fraunces,serif;font-size:20px;letter-spacing:.01em;color:var(--cream);text-decoration:none}
 .mark{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .5s,transform .5s,visibility 0s .5s}
-body.work .mark{opacity:1;visibility:visible;transform:none;transition:opacity .5s,transform .5s,visibility 0s}
+body.work .mark,body.contact .mark{opacity:1;visibility:visible;transform:none;transition:opacity .5s,transform .5s,visibility 0s}
 @media(prefers-reduced-motion:reduce){.mark{transition:none!important}}
 nav{display:flex;gap:6px;flex-wrap:wrap}
 nav a{color:var(--cream);text-decoration:none;padding:10px 12px;border-radius:9999px;font-size:15px;opacity:.86}
@@ -61,7 +61,7 @@ button.ghost{background:transparent;color:var(--leaf);border:1px solid rgba(196,
 button:focus-visible{outline:2px solid var(--cream);outline-offset:2px}
 .note{font-size:13px;color:var(--sage);margin:0}
 .shade.deep{background:rgba(20,34,25,.72);transition:background 1.2s ease}
-body.work main{display:none}
+body.work main,body.contact main{display:none}
 header{pointer-events:none}header a{pointer-events:auto}
 .hin{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;width:100%}
 .hin.gone a{pointer-events:none}
@@ -107,9 +107,24 @@ body.work .dots{display:flex}
 .projects b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:19px;color:var(--cream)}
 .projects span{font-size:14px;color:var(--sage)}
 @media(max-width:600px){.role ul.projects{grid-template-columns:minmax(0,1fr)}}
+#contact{position:fixed;inset:0;z-index:2;overflow-y:auto;display:flex;align-items:center;justify-content:center;padding:96px max(5vw,20px) 88px}
+#contact[hidden]{display:none}
+.cform{width:min(560px,100%);display:grid;gap:16px;margin:auto 0}
+.cform h2{font-family:Fraunces,serif;font-weight:300;font-size:clamp(40px,6vw,64px);line-height:1.05;margin:0;letter-spacing:-.01em}
+.cform .intro{margin:0 0 8px;font-size:17px;opacity:.9}
+.cform label{display:grid;gap:6px;font-size:14px;color:var(--leaf)}
+.cform input,.cform textarea{font:inherit;font-size:16px;color:var(--cream);background:rgba(28,46,34,.72);border:1px solid rgba(196,222,160,.28);
+  border-radius:10px;padding:12px 14px;min-height:44px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);resize:vertical}
+.cform input:focus,.cform textarea:focus{outline:none;border-color:var(--leaf);box-shadow:0 0 0 3px rgba(196,222,160,.18)}
+.cform .bad{border-color:#e9a3a3}
+.cform .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.crow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:4px}
+#cf-send{min-height:44px;padding:0 22px;font-size:15px}
+#cf-send[disabled]{opacity:.6;cursor:default}
+.cstatus{margin:0;font-size:14px;color:var(--sage)}
 .copy{margin:0;font-size:13px;color:var(--sage);letter-spacing:.01em}
 #copyHome{position:fixed;right:max(5vw,20px);bottom:max(2vw,12px);z-index:3;line-height:44px;transition:opacity .6s ease}
-body.work #copyHome{opacity:0;pointer-events:none}
+body.work #copyHome,body.contact #copyHome{opacity:0;pointer-events:none}
 .copy-work{margin-top:56px}
 .creds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;padding-top:32px;border-top:1px solid rgba(196,222,160,.22)}
 .creds h4{font-family:Fraunces,serif;font-weight:400;font-size:20px;margin:0 0 8px;color:var(--leaf)}
@@ -123,6 +138,7 @@ body.work #copyHome{opacity:0;pointer-events:none}
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <filter id="fx-home" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="3"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="fx-contact" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="11"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
   <filter id="fx-work" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="7"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
   <filter id="fx-scroll" x="-20%" y="-60%" width="140%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="9"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
   <filter id="fx-nav" x="-20%" y="-60%" width="140%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="5"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
@@ -131,7 +147,7 @@ body.work #copyHome{opacity:0;pointer-events:none}
 <div class="shade"></div>
 <header><div class="hin">
   <a class="mark" href="#home" data-view="home">Michael Cascio</a>
-  <nav aria-label="Main"><a href="#">About</a><a href="#work" data-view="work">Work</a><a href="#">Writing</a></nav>
+  <nav aria-label="Main"><a href="#experience" data-view="work">Experience</a><a href="#contact" data-view="contact">Contact</a></nav>
 </div></header>
 <main>
   <h1>Michael <em>Cascio</em></h1>
@@ -139,7 +155,7 @@ body.work #copyHome{opacity:0;pointer-events:none}
 </main>
 <section id="work" hidden aria-labelledby="work-title"><div class="wrap">
   <div class="pg" data-label="Overview">
-  <h2 id="work-title">Work</h2>
+  <h2 id="work-title">Experience</h2>
   <p class="intro">Fifteen years at Skidmore, Owings &amp; Merrill, from engineering towers and train stations to building the firm's R&amp;D program and helping launch its corporate venture company.</p>
   <div class="figs">
     <div><b>40+</b><span>corporate venture initiatives</span></div>
@@ -194,6 +210,17 @@ body.work #copyHome{opacity:0;pointer-events:none}
   </div>
   <p class="copy copy-work">&copy; <span class="yr">2026</span> Michael Cascio</p>
 </div></div></section>
+<section id="contact" hidden aria-labelledby="contact-title">
+  <form class="cform" id="cform" novalidate>
+    <h2 id="contact-title">Contact</h2>
+    <p class="intro">Have a project, a startup, or an idea at the edge of building and technology? Send a note.</p>
+    <label>Name<input name="name" id="cf-name" autocomplete="name" required></label>
+    <label>Email<input name="email" id="cf-email" type="email" autocomplete="email" required></label>
+    <label>Message<textarea name="message" id="cf-msg" rows="5" required></textarea></label>
+    <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+    <div class="crow"><button type="submit" id="cf-send">Send message</button><p class="cstatus" id="cf-status" role="status"></p></div>
+  </form>
+</section>
 <nav class="dots" aria-label="Work sections"></nav>
 <p class="copy" id="copyHome">&copy; <span class="yr">2026</span> Michael Cascio</p>
 <div class="tune" id="tune">
@@ -339,8 +366,9 @@ if('IntersectionObserver' in window){wk.classList.add('reveal');
     const i=pgs.indexOf(e.target);dbs.forEach((b,j)=>b.classList.toggle('on',j===i));}}),{root:wk,threshold:[.3,.6]});
   pgs.forEach(g=>io.observe(g));}
 document.querySelectorAll('.yr').forEach(e=>e.textContent=new Date().getFullYear());
-const views={home:document.querySelector('main'),work:wk};
-const swap=v=>{const w=v==='work';wk.hidden=!w;document.body.classList.toggle('work',w);shade.classList.toggle('deep',w);wk.scrollTop=0;lastY=0;navX=navT=0;hin.style.opacity='';hin.style.filter='';hin.classList.remove('gone');};
+const ct=document.getElementById('contact');
+const views={home:document.querySelector('main'),work:wk,contact:ct};
+const swap=v=>{const w=v==='work',c=v==='contact';wk.hidden=!w;ct.hidden=!c;document.body.classList.toggle('work',w);document.body.classList.toggle('contact',c);shade.classList.toggle('deep',w||c);wk.scrollTop=0;lastY=0;navX=navT=0;hin.style.opacity='';hin.style.filter='';hin.classList.remove('gone');};
 /* dissolve: a view melts through warped noise (like the painting) as it fades */
 const melt=(v,from,to,dur)=>new Promise(done=>{const parts=[[views[v],'fx-'+v,110],[hdr,'fx-nav',40]];
   parts.forEach(([,id])=>document.getElementById(id).querySelector('feTurbulence').setAttribute('seed',1+Math.floor(Math.random()*99)));
@@ -355,10 +383,26 @@ const show=async v=>{want=v;if(busy)return;
   while(want!==cur){const next=want;
     await melt(cur,0,1,750);swap(next);views[next].style.opacity=0;cur=next;await melt(next,1,0,1150);repaint(views[next]);needsRepaint=next==='work';}
   busy=false;};
-const route=()=>show(location.hash==='#work'?'work':'home');
+const route=()=>{const h=location.hash;show(h==='#experience'||h==='#work'?'work':h==='#contact'?'contact':'home');};
 document.querySelectorAll('[data-view]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const v=a.dataset.view;show(v);
-  try{history.replaceState(null,'','#'+v);}catch(err){}}));
+  try{history.replaceState(null,'','#'+(v==='work'?'experience':v));}catch(err){}}));
 addEventListener('hashchange',route);route();
+/* contact form: posts to FormSubmit, which emails the message on */
+const cf=document.getElementById('cform'),cfs=document.getElementById('cf-status'),cfb=document.getElementById('cf-send');
+cf.addEventListener('input',e=>{e.target.classList.remove('bad');if(cfs.textContent.startsWith('Please'))cfs.textContent='';});
+cf.addEventListener('submit',async e=>{e.preventDefault();
+  const f={name:cf.name.value.trim(),email:cf.email.value.trim(),message:cf.message.value.trim()};
+  const bad=[['cf-name',!f.name],['cf-email',!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email)],['cf-msg',!f.message]];
+  bad.forEach(([id,b])=>document.getElementById(id).classList.toggle('bad',b));
+  if(bad.some(([,b])=>b)){cfs.textContent='Please add your name, a valid email and a message.';return;}
+  if(cf._honey.value)return;
+  cfb.disabled=true;cfs.textContent='Sending…';
+  try{const r=await fetch('https://formsubmit.co/ajax/mscascio1@gmail.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},
+      body:JSON.stringify({...f,_subject:'New message from cascio.github.io',_replyto:f.email,_template:'table'})});
+    const j=await r.json().catch(()=>({}));if(!r.ok||j.success==='false'||j.success===false)throw 0;
+    cf.reset();cfs.textContent='Thanks, your message is on its way.';}
+  catch(err){cfs.textContent='Sorry, that didn’t send. Please try again in a moment.';}
+  cfb.disabled=false;});
 const out=id=>document.querySelector(`output[for=${id}]`);
 ['speed','warp','scale','light'].forEach(id=>{const el=document.getElementById(id);
   const set=()=>{S[id]=parseFloat(el.value);out(id).textContent=S[id].toFixed(id==='light'?2:1);};
