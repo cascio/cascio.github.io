@@ -71,7 +71,23 @@ header{pointer-events:none}header a{pointer-events:auto}
 #work::-webkit-scrollbar-track{background:transparent}
 #work::-webkit-scrollbar-thumb{background:rgba(196,222,160,.7);border-radius:9999px;border:3px solid transparent;background-clip:padding-box}
 #work::-webkit-scrollbar-thumb:hover{background-color:#C4DEA0}
-#work .wrap{max-width:1040px;margin:0 auto;padding:120px max(5vw,20px) 96px}
+#work .wrap{max-width:1040px;margin:0 auto;padding:0 max(5vw,20px)}
+#work{scroll-snap-type:y mandatory}
+.pg{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:96px 0 80px;scroll-snap-align:start}
+.pg>.role,.pg>.creds{border-top:0;padding-top:0}
+#work.reveal .pg>*{opacity:0;transform:translateY(14px);transition:opacity .9s ease,transform .9s ease}
+#work.reveal .pg.in>*{opacity:1;transform:none}
+.dots{position:fixed;right:max(2vw,10px);top:50%;transform:translateY(-50%);z-index:4;display:none;flex-direction:column;gap:4px}
+body.work .dots{display:flex}
+.dots button{all:unset;cursor:pointer;width:28px;height:28px;display:grid;place-items:center;position:relative}
+.dots button::before{content:"";width:7px;height:7px;border-radius:50%;background:rgba(196,222,160,.35);transition:background .3s,transform .3s}
+.dots button.on::before{background:#C4DEA0;transform:scale(1.5)}
+.dots button:focus-visible{outline:2px solid #C4DEA0;border-radius:50%}
+.dots button span{position:absolute;right:32px;white-space:nowrap;font-size:13px;color:var(--leaf);opacity:0;transition:opacity .3s;pointer-events:none}
+.dots button:hover span,.dots button:focus-visible span{opacity:1}
+@media(prefers-reduced-motion:reduce){#work.reveal .pg>*{transition:none}}
+@media(hover:none),(max-width:600px){.dots span{display:none}}
+@media(max-width:600px){#work .wrap{padding-right:44px}.dots{right:4px}}
 #work h2{font-family:Fraunces,serif;font-weight:300;font-size:clamp(40px,6vw,64px);line-height:1.05;margin:0;letter-spacing:-.01em}
 #work .intro{max-width:40em;font-size:18px;margin:18px 0 0;opacity:.9}
 .figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:48px 0;background:rgba(196,222,160,.2);border:1px solid rgba(196,222,160,.2);border-radius:12px;overflow:hidden}
@@ -112,6 +128,7 @@ header{pointer-events:none}header a{pointer-events:auto}
   <p class="lede">Structural engineer turned startup operator and venture builder. Founding team at SOM IW after more than a decade at SOM, and an angel investor in the built environment, advanced materials, robotics and energy.</p>
 </main>
 <section id="work" hidden aria-labelledby="work-title"><div class="wrap">
+  <div class="pg" data-label="Overview">
   <h2 id="work-title">Work</h2>
   <p class="intro">Fifteen years at Skidmore, Owings &amp; Merrill, from engineering towers and train stations to building the firm's R&amp;D program and helping launch its corporate venture company.</p>
   <div class="figs">
@@ -120,7 +137,8 @@ header{pointer-events:none}header a{pointer-events:auto}
     <div><b>14+</b><span>international patents managed</span></div>
     <div><b>118+</b><span>R+I Special Projects</span></div>
   </div>
-  <article class="role">
+  </div>
+  <div class="pg" data-label="SOM IW"><article class="role">
     <div class="when">2023 – 2026</div>
     <div><h3>Associate Director, Corporate Development &amp; Ventures<small>SOM IW · founding team</small></h3>
       <p>SOM IW is the corporate venture company commercializing SOM's IP, technology and design.</p>
@@ -131,33 +149,34 @@ header{pointer-events:none}header a{pointer-events:auto}
         <li>Structured 3 startup equity investments and partnerships with 10+ industry leaders, producing 18+ revenue-generating products.</li>
         <li>Led filing strategy for a 14+ patent portfolio: 5 new filings, 3 granted, 1 pending.</li>
       </ul></div>
-  </article>
-  <article class="role">
+  </article></div>
+  <div class="pg" data-label="Research + Innovation"><article class="role">
     <div class="when">2019 – 2023</div>
     <div><h3>Associate, Research + Innovation<small>SOM · founding team of the firm-wide R&amp;D program</small></h3>
       <ul>
-        <li>Set up R+I's processes, budgets and governance at its 2020 launch, and built its idea submission and review platform.</li>
-        <li>Fostered 500+ staff ideas and 118+ Special Projects on a $1.5M+ annual budget.</li>
-        <li>Managed the $500K+ yearly global exhibition budget, with shows in London, Venice, Milan, Hong Kong, Dubai, Paris and more.</li>
-        <li>Helped secure $600K+ in research grants, including NASA SBIR/STTR awards.</li>
+        <li>Set up R+I's business processes, budget frameworks and governance at its 2020 launch.</li>
+        <li>Built the idea submission and Special Project review platform and supported the new-hire research program, helping staff across the firm generate 500+ ideas and 118+ Special Projects.</li>
+        <li>Managed SOM's global exhibition program, leading cross-functional teams delivering exhibitions in London, Venice, Milan, Madrid, Xiamen, Hong Kong, New York, Dubai, Paris, Munich and Ankara.</li>
+        <li>Helped secure research grant funding for the firm, including NASA SBIR/STTR awards.</li>
       </ul></div>
-  </article>
-  <article class="role">
+  </article></div>
+  <div class="pg" data-label="Structural Engineer"><article class="role">
     <div class="when">2011 – 2018</div>
     <div><h3>Structural Engineer<small>SOM · licensed PE, New York</small></h3>
       <p>Engineered Manhattan West (~$4.5B construction value) and MiamiCentral Station (~$2B), growing from intern to licensed PE across steel, concrete, new construction and adaptive reuse.</p></div>
-  </article>
-  <article class="role">
+  </article></div>
+  <div class="pg" data-label="Dopecheddar"><article class="role">
     <div class="when">2012 – 2019</div>
     <div><h3>Founder<small>Dopecheddar · side project</small></h3>
       <p>An independent electronic music discovery platform. Automated curation and distribution with Python, PostgreSQL and the SoundCloud, Tumblr and Twitter APIs, reaching 5,500+ listeners in 100+ countries.</p></div>
-  </article>
-  <div class="creds">
+  </article></div>
+  <div class="pg" data-label="Credentials"><div class="creds">
     <div><h4>Education</h4><p>MEng and BEng, Civil Engineering, Stevens Institute of Technology</p></div>
     <div><h4>Licenses</h4><p>Professional Engineer, New York State, since 2018</p></div>
     <div><h4>Investing</h4><p>Angel investor in the built environment, advanced materials, robotics, energy and financial infrastructure</p></div>
   </div>
-</div></section>
+</div></div></section>
+<nav class="dots" aria-label="Work sections"></nav>
 <div class="tune" id="tune">
   <button class="opener" id="tuneOpen" type="button" aria-expanded="false" aria-controls="tunePanel">Tune the painting</button>
   <div class="panel" id="tunePanel" role="dialog" aria-label="Painting controls">
@@ -290,8 +309,16 @@ const paintNav=()=>{navX+=(navT-navX)*.12;if(Math.abs(navT-navX)<.004)navX=navT;
   hin.style.filter=navX>.004?fx('fx-scroll',(navX*4).toFixed(2)):'';hin.classList.toggle('gone',navX>.6);
   navRAF=navX!==navT?requestAnimationFrame(paintNav):0;};
 const setNav=t=>{if(reduce.matches){navX=t;navT=t;}navT=t;if(!navRAF)navRAF=requestAnimationFrame(paintNav);};
-wk.addEventListener('scroll',()=>{if(needsRepaint){needsRepaint=false;repaint(wk);}const y=wk.scrollTop,dy=y-lastY;lastY=y;
+wk.addEventListener('scroll',()=>{if(needsRepaint){needsRepaint=false;const w=wk.querySelector('.wrap');w.style.transform='translateZ(0)';w.style.opacity='.999';requestAnimationFrame(()=>requestAnimationFrame(()=>{w.style.transform='';w.style.opacity='';}));}const y=wk.scrollTop,dy=y-lastY;lastY=y;
   if(y<80)setNav(0);else if(dy>2)setNav(1);else if(dy<-6)setNav(0);},{passive:true});
+/* Work page sections: snap one at a time, fade in as they arrive, dots on the right */
+const pgs=[...wk.querySelectorAll('.pg')],dots=document.querySelector('.dots');
+dots.innerHTML=pgs.map((g,i)=>`<button type="button" aria-label="${g.dataset.label}"><span>${g.dataset.label}</span></button>`).join('');
+const dbs=[...dots.children];dbs.forEach((b,i)=>b.addEventListener('click',()=>wk.scrollTo({top:pgs[i].offsetTop,behavior:reduce.matches?'auto':'smooth'})));
+if('IntersectionObserver' in window){wk.classList.add('reveal');
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>.3){e.target.classList.add('in');
+    const i=pgs.indexOf(e.target);dbs.forEach((b,j)=>b.classList.toggle('on',j===i));}}),{root:wk,threshold:[.3,.6]});
+  pgs.forEach(g=>io.observe(g));}
 const views={home:document.querySelector('main'),work:wk};
 const swap=v=>{const w=v==='work';wk.hidden=!w;document.body.classList.toggle('work',w);shade.classList.toggle('deep',w);wk.scrollTop=0;lastY=0;navX=navT=0;hin.style.opacity='';hin.style.filter='';hin.classList.remove('gone');};
 /* dissolve: a view melts through warped noise (like the painting) as it fades */
