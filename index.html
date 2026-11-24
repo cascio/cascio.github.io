@@ -178,7 +178,7 @@ const P=['#1C2E22','#263E2F','#2F4A39','#2F5E43','#96B880','#C4DEA0','#ECF3DE'].
 const S={speed:1,warp:3.2,scale:1.8,light:0.06,seed:Math.random()*100};
 const reduce=matchMedia('(prefers-reduced-motion: reduce)');
 const fs=`precision highp float;
-uniform vec2 r;uniform float t,seed,warp,scale,light;uniform vec3 c[7];
+uniform vec2 r;uniform float t,seed,warp,scale,light;uniform vec3 c[7];uniform vec4 tp[16];uniform vec2 tv[16];
 float h(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
 float n(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);
  return mix(mix(h(i),h(i+vec2(1,0)),u.x),mix(h(i+vec2(0,1)),h(i+1.),u.x),u.y);}
@@ -187,10 +187,17 @@ float fbm(vec2 p){float a=.5,s=0.;for(int i=0;i<6;i++){s+=a*n(p);p=R*p*2.03+1.7;
 float ridge(vec2 p){float a=.5,s=0.;for(int i=0;i<5;i++){s+=a*(1.-abs(n(p)*2.-1.));p=R*p*2.1+3.1;a*=.5;}return s;}
 void main(){
  vec2 uv=(gl_FragCoord.xy-.5*r)/min(r.x,r.y)*scale+seed;
+ /* touch: each point drags the paint along its motion and swirls it, fading after release */
+ vec2 disp=vec2(0.);float glow=0.;
+ for(int i=0;i<16;i++){vec4 k=tp[i];if(k.z<.002)continue;
+  vec2 cc=(k.xy-.5*r)/min(r.x,r.y)*scale+seed;vec2 d=uv-cc;float rr=k.w*scale;
+  float w=k.z*exp(-dot(d,d)/(rr*rr));
+  disp+=w*(-tv[i]*scale*.22+vec2(-d.y,d.x)*1.3+d*.45);glow+=w;}
+ uv+=disp*.4;
  float T=t*.035;
  vec2 q=vec2(fbm(uv+vec2(0.,T)),fbm(uv+vec2(5.2,1.3)-T*.8));
  vec2 s=vec2(fbm(uv+warp*q+vec2(1.7,9.2)+.6*T),fbm(uv+warp*q+vec2(8.3,2.8)-.5*T));
- float f=fbm(uv+warp*s)+light;
+ float f=fbm(uv+warp*s)+light+.12*min(glow,1.5);
  float v=ridge(uv*.7+warp*.5*q+T*.3);
  vec3 col=mix(c[0],c[1],smoothstep(.15,.5,f));
  col=mix(col,c[2],smoothstep(.25,.75,length(q)-.2));
@@ -213,7 +220,41 @@ if(gl){
   gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
   const loc=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-  const U={};['r','t','seed','warp','scale','light'].forEach(k=>U[k]=gl.getUniformLocation(pr,k));
+  const U={};['r','t','seed','warp','scale','light','tp','tv'].forEach(k=>U[k]=gl.getUniformLocation(pr,k));
+  /* touch and mouse influence: up to 16 splats; held points grow with time and pressure, moving points
+     leave a trail whose strength follows their speed, and everything relaxes back after release */
+  const N=16,sp=Array.from({length:N},()=>({x:0,y:0,s:0,r:.16,vx:0,vy:0,held:false})),TP=new Float32Array(N*4),TV=new Float32Array(N*2);
+  let si=0;const live=new Map();
+  const spawn=(x,y,vx,vy,s,r,held)=>{const k=sp[si];si=(si+1)%N;Object.assign(k,{x,y,vx,vy,s,r,held});return k;};
+  const pDown=(id,x,y,f)=>{const L=live.get(id);if(L&&L.k)L.k.held=false;
+    live.set(id,{k:spawn(x,y,0,0,.55+.5*f,.13+.05*f,true),lx:x,ly:y,lt:performance.now(),f,hover:false});};
+  const pMove=(id,x,y,f,hover)=>{const now=performance.now();let L=live.get(id);
+    if(!L){if(!hover)return;L={k:null,lx:x,ly:y,lt:now,f:0,hover:true};live.set(id,L);return;}
+    if(f)L.f=f;const dx=x-L.lx,dy=y-L.ly,dist=Math.hypot(dx,dy);
+    if(dist<5&&now-L.lt<80){if(L.k){L.k.x=x;L.k.y=y;}return;}
+    const m=Math.min(innerWidth,innerHeight),dt=Math.max(now-L.lt,8)/1000;
+    let vx=dx/m/dt,vy=-dy/m/dt;const sp2=Math.hypot(vx,vy);if(sp2>4){vx*=4/sp2;vy*=4/sp2;}
+    const speed=Math.min(sp2,4),held=!L.hover;if(L.k)L.k.held=false;
+    L.k=spawn(x,y,vx,vy,(L.hover?.22:.5)+.18*speed+.35*L.f,(L.hover?.11:.14)+.02*speed,held);
+    L.lx=x;L.ly=y;L.lt=now;};
+  const pUp=id=>{const L=live.get(id);if(L&&L.k)L.k.held=false;live.delete(id);};
+  const opt={passive:true};
+  addEventListener('touchstart',e=>{for(const t of e.changedTouches)pDown('t'+t.identifier,t.clientX,t.clientY,t.force||0);},opt);
+  addEventListener('touchmove',e=>{for(const t of e.changedTouches)pMove('t'+t.identifier,t.clientX,t.clientY,t.force||0,false);},opt);
+  const tEnd=e=>{for(const t of e.changedTouches)pUp('t'+t.identifier);};
+  addEventListener('touchend',tEnd,opt);addEventListener('touchcancel',tEnd,opt);
+  let lastTouch=0;addEventListener('touchstart',()=>{lastTouch=performance.now();},opt);
+  const isMouse=()=>performance.now()-lastTouch>800;
+  addEventListener('mousemove',e=>{if(isMouse())pMove('m',e.clientX,e.clientY,e.buttons?.6:0,!e.buttons);},opt);
+  addEventListener('mousedown',e=>{if(isMouse())pDown('m',e.clientX,e.clientY,.6);},opt);
+  addEventListener('mouseup',()=>{if(isMouse()){pUp('m');}},opt);
+  document.addEventListener('mouseleave',()=>pUp('m'),opt);
+  const stepSplats=dt=>{const W=cv.width/innerWidth,H=cv.height/innerHeight;
+    sp.forEach((k,i)=>{if(k.held){k.s+=(1.5-k.s)*Math.min(dt*.9,1);k.r+=(.24-k.r)*Math.min(dt*.5,1);}
+      else k.s*=Math.exp(-dt/.85);
+      k.vx*=Math.exp(-dt/.7);k.vy*=Math.exp(-dt/.7);if(k.s<.002)k.s=0;
+      TP[i*4]=k.x*W;TP[i*4+1]=(innerHeight-k.y)*H;TP[i*4+2]=k.s;TP[i*4+3]=k.r;TV[i*2]=k.vx;TV[i*2+1]=k.vy;});
+    gl.uniform4fv(U.tp,TP);gl.uniform2fv(U.tv,TV);};
   gl.uniform3fv(gl.getUniformLocation(pr,'c'),new Float32Array(P.flat()));
   const resize=()=>{const d=Math.min(devicePixelRatio||1,1.5)*.75;
     cv.width=Math.round(innerWidth*d);cv.height=Math.round(innerHeight*d);gl.viewport(0,0,cv.width,cv.height);};
@@ -223,7 +264,7 @@ if(gl){
     gl.uniform1f(U.warp,S.warp);gl.uniform1f(U.scale,S.scale);gl.uniform1f(U.light,S.light);gl.drawArrays(gl.TRIANGLES,0,3);};
   let last=performance.now();
   const loop=now=>{const dt=Math.min(now-last,100)/1000;last=now;
-    if(!reduce.matches&&!document.hidden)clock+=dt*S.speed;draw(clock);requestAnimationFrame(loop);};
+    if(!reduce.matches&&!document.hidden)clock+=dt*S.speed;stepSplats(dt);draw(clock);requestAnimationFrame(loop);};
   requestAnimationFrame(loop);
 }
 const shade=document.querySelector('.shade'),wk=document.getElementById('work');
