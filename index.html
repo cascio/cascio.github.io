@@ -401,9 +401,9 @@ cf.addEventListener('submit',async e=>{e.preventDefault();
   cfb.disabled=true;cfs.textContent='Sending…';
   try{const r=await fetch('https://formsubmit.co/ajax/mscascio1@gmail.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},
       body:JSON.stringify({...f,_subject:'New message from cascio.github.io',_replyto:f.email,_template:'table'})});
-    const j=await r.json().catch(()=>({}));if(!r.ok||j.success==='false'||j.success===false)throw 0;
+    const j=await r.json().catch(()=>({}));if(!r.ok||j.success==='false'||j.success===false)throw new Error(j.message||('HTTP '+r.status));
     cf.reset();cfs.textContent='Thanks, your message is on its way.';}
-  catch(err){cfs.textContent='Sorry, that didn’t send. Please try again in a moment.';}
+  catch(err){cfs.textContent='Sorry, that didn’t send'+(err&&err.message?' ('+err.message+')':'')+'. Please try again in a moment.';}
   cfb.disabled=false;});
 const out=id=>document.querySelector(`output[for=${id}]`);
 ['speed','warp','scale','light'].forEach(id=>{const el=document.getElementById(id);
