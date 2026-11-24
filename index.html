@@ -102,6 +102,11 @@ body.work .dots{display:flex}
 .role ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:10px;max-width:44em}
 .role li{padding-left:18px;position:relative;opacity:.9}
 .role li::before{content:"";position:absolute;left:0;top:.7em;width:7px;height:7px;border-radius:50%;background:var(--sage)}
+.role ul.projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 28px;margin-top:20px}
+.role ul.projects li{padding-left:0}.role ul.projects li::before{display:none}
+.projects b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:19px;color:var(--cream)}
+.projects span{font-size:14px;color:var(--sage)}
+@media(max-width:600px){.role ul.projects{grid-template-columns:minmax(0,1fr)}}
 .creds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;padding-top:32px;border-top:1px solid rgba(196,222,160,.22)}
 .creds h4{font-family:Fraunces,serif;font-weight:400;font-size:20px;margin:0 0 8px;color:var(--leaf)}
 .creds p{margin:0;opacity:.88}
@@ -164,7 +169,13 @@ body.work .dots{display:flex}
   <div class="pg" data-label="Structural Engineer"><article class="role">
     <div class="when">2011 – 2018</div>
     <div><h3>Structural Engineer<small>SOM · licensed PE, New York</small></h3>
-      <p>Engineered Manhattan West (~$4.5B construction value) and MiamiCentral Station (~$2B), growing from intern to licensed PE across steel, concrete, new construction and adaptive reuse.</p></div>
+      <p>Grew from intern to licensed PE engineering steel and concrete structures across new construction and adaptive reuse, in the US and abroad.</p>
+      <ul class="projects">
+        <li><b>Manhattan West</b><span>New York · ~$4.5B construction value</span></li>
+        <li><b>MiamiCentral Station</b><span>Miami · ~$2B construction value</span></li>
+        <li><b>Godrej BKC</b><span>Mumbai · office building</span></li>
+        <li><b>JW Marriott</b><span>Shanghai · hotel</span></li>
+      </ul></div>
   </article></div>
   <div class="pg" data-label="Dopecheddar"><article class="role">
     <div class="when">2012 – 2019</div>
