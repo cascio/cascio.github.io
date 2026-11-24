@@ -26,7 +26,8 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;
              linear-gradient(to top,rgba(20,34,25,.4),rgba(20,34,25,0) 22%)}
 header{position:fixed;top:0;left:0;right:0;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
   padding:22px max(5vw,20px)}
-.mark{font-family:Fraunces,serif;font-size:20px;letter-spacing:.01em;color:var(--cream);text-decoration:none}
+.mark{font-family:Fraunces,serif;font-weight:300;font-size:24px;letter-spacing:-.01em;color:var(--cream);text-decoration:none}
+.mark em{font-style:italic;color:var(--leaf)}
 .mark{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .5s,transform .5s,visibility 0s .5s}
 body.work .mark,body.contact .mark{opacity:1;visibility:visible;transform:none;transition:opacity .5s,transform .5s,visibility 0s}
 @media(prefers-reduced-motion:reduce){.mark{transition:none!important}}
@@ -148,7 +149,7 @@ body.work #copyHome,body.contact #copyHome{opacity:0;pointer-events:none}
 <canvas id="c" aria-hidden="true"></canvas>
 <div class="shade"></div>
 <header><div class="hin">
-  <a class="mark" href="#home" data-view="home">Michael Cascio</a>
+  <a class="mark" href="#home" data-view="home">Michael <em>Cascio</em></a>
   <nav aria-label="Main"><a href="#experience" data-view="work">Experience</a><a href="#contact" data-view="contact">Contact</a></nav>
 </div></header>
 <main>
