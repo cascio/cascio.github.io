@@ -102,10 +102,11 @@ body.work .dots{display:flex}
 .role ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:10px;max-width:44em}
 .role li{padding-left:18px;position:relative;opacity:.9}
 .role li::before{content:"";position:absolute;left:0;top:.7em;width:7px;height:7px;border-radius:50%;background:var(--sage)}
-.creds{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:24px;padding-top:32px;border-top:1px solid rgba(196,222,160,.22)}
+.creds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;padding-top:32px;border-top:1px solid rgba(196,222,160,.22)}
 .creds h4{font-family:Fraunces,serif;font-weight:400;font-size:20px;margin:0 0 8px;color:var(--leaf)}
 .creds p{margin:0;opacity:.88}
 @media(max-width:900px){.figs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.creds{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:700px){.role{grid-template-columns:minmax(0,1fr)}.role .when{padding-top:0}}
 @media(max-width:600px){header{padding:16px 20px}nav a{padding:10px 8px}main{padding-bottom:16vh}}
 </style>
@@ -174,6 +175,7 @@ body.work .dots{display:flex}
     <div><h4>Education</h4><p>MEng and BEng, Civil Engineering, Stevens Institute of Technology</p></div>
     <div><h4>Licenses</h4><p>Professional Engineer, New York State, since 2018</p></div>
     <div><h4>Investing</h4><p>Angel investor in the built environment, advanced materials, robotics, energy and financial infrastructure</p></div>
+    <div><h4>Interests</h4><p>Space tech, climate and energy, electronic music, sci-fi, hiking and plants</p></div>
   </div>
 </div></div></section>
 <nav class="dots" aria-label="Work sections"></nav>
