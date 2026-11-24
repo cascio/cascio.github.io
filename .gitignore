@@ -1,2 +1,13 @@
+# macOS / Windows
 .DS_Store
+Thumbs.db
+
+# Editors
 *.swp
+.vscode/
+.idea/
+
+# Local secrets and build output
+.env
+_site/
+node_modules/

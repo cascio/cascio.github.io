@@ -107,6 +107,10 @@ body.work .dots{display:flex}
 .projects b{display:block;font-family:Fraunces,serif;font-weight:400;font-size:19px;color:var(--cream)}
 .projects span{font-size:14px;color:var(--sage)}
 @media(max-width:600px){.role ul.projects{grid-template-columns:minmax(0,1fr)}}
+.copy{margin:0;font-size:13px;color:var(--sage);letter-spacing:.01em}
+#copyHome{position:fixed;right:max(5vw,20px);bottom:max(2vw,12px);z-index:3;line-height:44px;transition:opacity .6s ease}
+body.work #copyHome{opacity:0;pointer-events:none}
+.copy-work{margin-top:56px}
 .creds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;padding-top:32px;border-top:1px solid rgba(196,222,160,.22)}
 .creds h4{font-family:Fraunces,serif;font-weight:400;font-size:20px;margin:0 0 8px;color:var(--leaf)}
 .creds p{margin:0;opacity:.88}
@@ -188,8 +192,10 @@ body.work .dots{display:flex}
     <div><h4>Investing</h4><p>Angel investor in the built environment, advanced materials, robotics, energy and financial infrastructure</p></div>
     <div><h4>Interests</h4><p>Space tech, electronic music, sci-fi, hiking and plants</p></div>
   </div>
+  <p class="copy copy-work">&copy; <span class="yr">2026</span> Michael Cascio</p>
 </div></div></section>
 <nav class="dots" aria-label="Work sections"></nav>
+<p class="copy" id="copyHome">&copy; <span class="yr">2026</span> Michael Cascio</p>
 <div class="tune" id="tune">
   <button class="opener" id="tuneOpen" type="button" aria-expanded="false" aria-controls="tunePanel">Tune the painting</button>
   <div class="panel" id="tunePanel" role="dialog" aria-label="Painting controls">
@@ -332,6 +338,7 @@ if('IntersectionObserver' in window){wk.classList.add('reveal');
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>.3){e.target.classList.add('in');
     const i=pgs.indexOf(e.target);dbs.forEach((b,j)=>b.classList.toggle('on',j===i));}}),{root:wk,threshold:[.3,.6]});
   pgs.forEach(g=>io.observe(g));}
+document.querySelectorAll('.yr').forEach(e=>e.textContent=new Date().getFullYear());
 const views={home:document.querySelector('main'),work:wk};
 const swap=v=>{const w=v==='work';wk.hidden=!w;document.body.classList.toggle('work',w);shade.classList.toggle('deep',w);wk.scrollTop=0;lastY=0;navX=navT=0;hin.style.opacity='';hin.style.filter='';hin.classList.remove('gone');};
 /* dissolve: a view melts through warped noise (like the painting) as it fades */
