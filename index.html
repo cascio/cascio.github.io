@@ -18,6 +18,7 @@
 *{box-sizing:border-box;min-width:0}
 html,body{height:100%}
 body{margin:0;background:var(--deep);color:var(--cream);font:16px/1.55 'DM Sans',system-ui,sans-serif;overflow:hidden}
+#veil{z-index:5;pointer-events:none;background:none!important;display:none}
 canvas{position:fixed;inset:0;width:100%;height:100%;display:block;
   background:radial-gradient(120% 90% at 30% 70%,var(--raised),var(--deep) 70%)}
 .shade{position:fixed;inset:0;pointer-events:none;transition:background 1.2s ease;
@@ -102,6 +103,7 @@ header{pointer-events:none}header a{pointer-events:auto}
   <filter id="fx-nav" x="-20%" y="-60%" width="140%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="5"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
 </svg>
 <canvas id="c" aria-hidden="true"></canvas>
+<canvas id="veil" aria-hidden="true"></canvas>
 <div class="shade"></div>
 <header><div class="hin">
   <a class="mark" href="#home" data-view="home">Michael Cascio</a>
@@ -204,6 +206,15 @@ void main(){
  gl_FragColor=vec4(col,1.);
 }`;
 let draw=()=>{};
+/* the veil: the same painting drawn ABOVE the page through a marbled mask, so pages dissolve into the artwork
+   without any CSS/SVG filter on the text (which iPhone Safari paints unreliably) */
+const fsVeil=fs.replace('uniform vec3 c[7];','uniform vec3 c[7];uniform float prog,dim;')
+ .replace('gl_FragColor=vec4(col,1.);',`float m=fbm(uv*.85+2.2*q+vec2(3.1,7.7)+T*.5);
+ float th=mix(.2,.86,prog);float a=smoothstep(m-.09,m+.09,th);
+ float edge=1.-abs(a*2.-1.);col=mix(col,c[5],.45*edge*edge);
+ col=mix(col,vec3(.078,.133,.098),dim);
+ gl_FragColor=vec4(col*a,a);`);
+let veil=null;
 if(gl){
   const sh=(type,src)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
     if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))console.log(gl.getShaderInfoLog(s));return s;};
@@ -223,13 +234,34 @@ if(gl){
     gl.uniform1f(U.warp,S.warp);gl.uniform1f(U.scale,S.scale);gl.uniform1f(U.light,S.light);gl.drawArrays(gl.TRIANGLES,0,3);};
   let last=performance.now();
   const loop=now=>{const dt=Math.min(now-last,100)/1000;last=now;
-    if(!reduce.matches&&!document.hidden)clock+=dt*S.speed;draw(clock);requestAnimationFrame(loop);};
+    if(!reduce.matches&&!document.hidden)clock+=dt*S.speed;draw(clock);if(veil&&veil.on)veil.draw(clock);requestAnimationFrame(loop);};
   requestAnimationFrame(loop);
+  const vc=document.getElementById('veil'),vg=vc.getContext('webgl',{antialias:false,premultipliedAlpha:true,alpha:true});
+  if(vg){
+    const vs=(type,src)=>{const o=vg.createShader(type);vg.shaderSource(o,src);vg.compileShader(o);
+      if(!vg.getShaderParameter(o,vg.COMPILE_STATUS))console.log(vg.getShaderInfoLog(o));return o;};
+    const vp=vg.createProgram();vg.attachShader(vp,vs(vg.VERTEX_SHADER,'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'));
+    vg.attachShader(vp,vs(vg.FRAGMENT_SHADER,fsVeil));vg.linkProgram(vp);
+    if(vg.getProgramParameter(vp,vg.LINK_STATUS)){
+      vg.useProgram(vp);vg.bindBuffer(vg.ARRAY_BUFFER,vg.createBuffer());
+      vg.bufferData(vg.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),vg.STATIC_DRAW);
+      const vl=vg.getAttribLocation(vp,'p');vg.enableVertexAttribArray(vl);vg.vertexAttribPointer(vl,2,vg.FLOAT,false,0,0);
+      const VU={};['r','t','seed','warp','scale','light','prog','dim'].forEach(k=>VU[k]=vg.getUniformLocation(vp,k));
+      vg.uniform3fv(vg.getUniformLocation(vp,'c'),new Float32Array(P.flat()));
+      veil={on:false,prog:0,dim:0,
+        draw(tm){if(vc.width!==cv.width||vc.height!==cv.height){vc.width=cv.width;vc.height=cv.height;vg.viewport(0,0,vc.width,vc.height);}
+          vg.clearColor(0,0,0,0);vg.clear(vg.COLOR_BUFFER_BIT);
+          vg.uniform2f(VU.r,vc.width,vc.height);vg.uniform1f(VU.t,tm);vg.uniform1f(VU.seed,S.seed);vg.uniform1f(VU.warp,S.warp);
+          vg.uniform1f(VU.scale,S.scale);vg.uniform1f(VU.light,S.light);vg.uniform1f(VU.prog,this.prog);vg.uniform1f(VU.dim,this.dim);
+          vg.drawArrays(vg.TRIANGLES,0,3);},
+        set(on){this.on=on;vc.style.display=on?'block':'none';if(on)this.draw(clock);}};
+    }
+  }
 }
 const shade=document.querySelector('.shade'),wk=document.getElementById('work');
 const hdr=document.querySelector('header');
-/* Marble warp everywhere. If Safari ever leaves text unpainted again, set NO_WARP_ON_WEBKIT to true. */
-const NO_WARP_ON_WEBKIT=false;
+/* the scroll-linked nav dissolve uses an SVG warp; Safari gets fade and blur only there */
+const NO_WARP_ON_WEBKIT=true;
 const webkit=NO_WARP_ON_WEBKIT&&/AppleWebKit/.test(navigator.userAgent)&&!/(Chrome|Chromium|Edg)\//.test(navigator.userAgent);
 const fx=(id,b)=>(webkit?'':`url(#${id}) `)+`blur(${b}px)`;
 /* load every face up front, so the Work page's fonts never arrive mid-dissolve */
@@ -249,19 +281,19 @@ wk.addEventListener('scroll',()=>{const y=wk.scrollTop,dy=y-lastY;lastY=y;
   if(y<80)setNav(0);else if(dy>2)setNav(1);else if(dy<-6)setNav(0);},{passive:true});
 const views={home:document.querySelector('main'),work:wk};
 const swap=v=>{const w=v==='work';wk.hidden=!w;document.body.classList.toggle('work',w);shade.classList.toggle('deep',w);wk.scrollTop=0;lastY=0;navX=navT=0;hin.style.opacity='';hin.style.filter='';hin.classList.remove('gone');};
-/* dissolve: a view melts through warped noise (like the painting) as it fades */
-const melt=(v,from,to,dur)=>new Promise(done=>{const parts=[[views[v],'fx-'+v,110],[hdr,'fx-nav',40]];
-  parts.forEach(([,id])=>document.getElementById(id).querySelector('feTurbulence').setAttribute('seed',1+Math.floor(Math.random()*99)));
-  const t0=performance.now();const step=now=>{const k=Math.min((now-t0)/dur,1),e=k<.5?2*k*k:1-((-2*k+2)**2)/2,x=from+(to-from)*e;
-    for(const [el,id,amp] of parts){el.style.opacity=1-x;document.getElementById(id).querySelector('feDisplacementMap').setAttribute('scale',(x*amp).toFixed(1));
-      el.style.filter=x>.002?fx(id,(x*4).toFixed(2)):'';}
-    if(k<1)requestAnimationFrame(step);else done();};requestAnimationFrame(step);});
+/* page dissolve: the painting's veil grows over the page in marbled shapes, the page swaps underneath, then the veil recedes */
+const ease=k=>k<.5?2*k*k:1-((-2*k+2)**2)/2;
+const melt=(v,from,to,dur)=>new Promise(done=>{const el=views[v];
+  if(veil){veil.dim=v==='work'?.62:.12;veil.set(true);}
+  const t0=performance.now();const step=now=>{const k=Math.min((now-t0)/dur,1),x=from+(to-from)*ease(k);
+    if(veil)veil.prog=x;else{el.style.opacity=1-x;hdr.style.opacity=1-x;}
+    if(k<1)requestAnimationFrame(step);else{if(veil&&x<=0)veil.set(false);done();}};requestAnimationFrame(step);});
 let cur=null,want=null,busy=false;
 const show=async v=>{want=v;if(busy)return;
   if(cur===null||reduce.matches){cur=v;swap(v);for(const el of [...Object.values(views),hdr]){el.style.opacity='';el.style.filter='';}return;}
   busy=true;
   while(want!==cur){const next=want;
-    await melt(cur,0,1,750);swap(next);views[next].style.opacity=0;cur=next;await melt(next,1,0,1150);repaint(views[next]);}
+    await melt(cur,0,1,800);swap(next);if(!veil)views[next].style.opacity=0;cur=next;repaint(views[next]);await melt(next,1,0,1200);}
   busy=false;};
 const route=()=>show(location.hash==='#work'?'work':'home');
 document.querySelectorAll('[data-view]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const v=a.dataset.view;show(v);
