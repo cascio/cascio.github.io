@@ -24,14 +24,14 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;
   background:radial-gradient(75% 55% at 22% 46%,rgba(20,34,25,.78),rgba(20,34,25,.35) 55%,rgba(20,34,25,0) 85%),
              linear-gradient(to bottom,rgba(20,34,25,.45),rgba(20,34,25,0) 18%),
              linear-gradient(to top,rgba(20,34,25,.4),rgba(20,34,25,0) 22%)}
-header{position:fixed;top:0;left:0;right:0;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+header{position:fixed;top:0;left:0;right:0;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:nowrap;
   padding:22px max(5vw,20px)}
 .mark{font-family:Fraunces,serif;font-weight:300;font-size:26px;letter-spacing:-.01em;color:var(--cream);text-decoration:none}
 .mark em{font-style:italic;color:var(--leaf)}
 .mark{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .5s,transform .5s,visibility 0s .5s}
 body.work .mark,body.contact .mark{opacity:1;visibility:visible;transform:none;transition:opacity .5s,transform .5s,visibility 0s}
 @media(prefers-reduced-motion:reduce){.mark{transition:none!important}}
-nav{display:flex;gap:6px;flex-wrap:wrap}
+nav{display:flex;gap:6px;flex-wrap:nowrap;margin-left:auto}
 nav a{color:var(--cream);text-decoration:none;padding:10px 12px;border-radius:9999px;font-size:17px;opacity:.86}
 nav a:hover,nav a:focus-visible{opacity:1;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px;outline:none}
 main{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;padding:96px max(5vw,20px) 13vh}
@@ -65,7 +65,7 @@ button:focus-visible{outline:2px solid var(--cream);outline-offset:2px}
 body.work main,body.contact main{display:none}
 body.work nav a[data-view=work],body.contact nav a[data-view=contact]{display:none}
 header{pointer-events:none}header a{pointer-events:auto}
-.hin{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;width:100%}
+.hin{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:nowrap;width:100%}
 .hin.gone a{pointer-events:none}
 #work{position:fixed;inset:0;z-index:2;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
   scrollbar-width:thin;scrollbar-color:rgba(196,222,160,.75) transparent}
@@ -134,7 +134,7 @@ body.work #copyHome,body.contact #copyHome{opacity:0;pointer-events:none}
 @media(max-width:900px){.figs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.creds{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:700px){.role{grid-template-columns:minmax(0,1fr)}.role .when{padding-top:0}}
-@media(max-width:600px){body{font-size:17px}header{padding:16px 20px}nav a{padding:10px 8px}main{padding-bottom:16vh}}
+@media(max-width:600px){body{font-size:17px}header{padding:16px 20px}.mark{font-size:23px;white-space:nowrap}nav{gap:0}nav a{padding:10px 8px}main{padding-bottom:16vh}}
 </style>
 </head>
 <body>
