@@ -7,7 +7,7 @@
 <meta name="description" content="Structural engineer turned startup operator and venture builder.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
 <style>
 /* VOICE: quiet, painterly, confident; a personal site that opens on one moving canvas.
    IDEA: a living oil painting in the AECIN forest greens, after the spirit of generative shader paintings.
@@ -62,6 +62,7 @@ button:focus-visible{outline:2px solid var(--cream);outline-offset:2px}
 .note{font-size:13px;color:var(--sage);margin:0}
 .shade.deep{background:rgba(20,34,25,.72);transition:background 1.2s ease}
 body.work main,body.contact main{display:none}
+body.work nav a[data-view=work],body.contact nav a[data-view=contact]{display:none}
 header{pointer-events:none}header a{pointer-events:auto}
 .hin{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;width:100%}
 .hin.gone a{pointer-events:none}
@@ -88,7 +89,7 @@ body.work .dots{display:flex}
 @media(prefers-reduced-motion:reduce){#work.reveal .pg>*{transition:none}}
 @media(hover:none),(max-width:600px){.dots span{display:none}}
 @media(max-width:600px){#work .wrap{padding-right:44px}.dots{right:4px}}
-#work h2{font-family:Fraunces,serif;font-weight:300;font-size:clamp(40px,6vw,64px);line-height:1.05;margin:0;letter-spacing:-.01em}
+#work h2{font-family:Fraunces,serif;font-weight:600;color:var(--leaf);font-size:clamp(40px,6vw,64px);line-height:1.05;margin:0;letter-spacing:-.01em}
 #work .intro{max-width:40em;font-size:18px;margin:18px 0 0;opacity:.9}
 .figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:48px 0;background:rgba(196,222,160,.2);border:1px solid rgba(196,222,160,.2);border-radius:12px;overflow:hidden}
 .figs div{background:rgba(28,46,34,.82);padding:20px 18px}
@@ -110,7 +111,7 @@ body.work .dots{display:flex}
 #contact{position:fixed;inset:0;z-index:2;overflow-y:auto;display:flex;align-items:center;justify-content:center;padding:96px max(5vw,20px) 88px}
 #contact[hidden]{display:none}
 .cform{width:min(560px,100%);display:grid;gap:16px;margin:auto 0}
-.cform h2{font-family:Fraunces,serif;font-weight:300;font-size:clamp(40px,6vw,64px);line-height:1.05;margin:0;letter-spacing:-.01em}
+.cform h2{font-family:Fraunces,serif;font-weight:600;color:var(--leaf);font-size:clamp(40px,6vw,64px);line-height:1.05;margin:0;letter-spacing:-.01em}
 .cform .intro{margin:0 0 8px;font-size:17px;opacity:.9}
 .cform label{display:grid;gap:6px;font-size:14px;color:var(--leaf)}
 .cform input,.cform textarea{font:inherit;font-size:16px;color:var(--cream);background:rgba(28,46,34,.72);border:1px solid rgba(196,222,160,.28);
@@ -127,7 +128,7 @@ body.work .dots{display:flex}
 body.work #copyHome,body.contact #copyHome{opacity:0;pointer-events:none}
 .copy-work{margin-top:56px}
 .creds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;padding-top:32px;border-top:1px solid rgba(196,222,160,.22)}
-.creds h4{font-family:Fraunces,serif;font-weight:400;font-size:20px;margin:0 0 8px;color:var(--leaf)}
+.creds h4{font-family:Fraunces,serif;font-weight:600;font-size:20px;margin:0 0 8px;color:var(--leaf)}
 .creds p{margin:0;opacity:.88}
 @media(max-width:900px){.figs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.creds{grid-template-columns:minmax(0,1fr)}}
@@ -138,6 +139,7 @@ body.work #copyHome,body.contact #copyHome{opacity:0;pointer-events:none}
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <filter id="fx-home" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="3"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="fx-dots" x="-200%" y="-20%" width="500%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="13"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
   <filter id="fx-contact" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="11"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
   <filter id="fx-work" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="7"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
   <filter id="fx-scroll" x="-20%" y="-60%" width="140%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="9"/><feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
@@ -339,7 +341,7 @@ const NO_WARP_ON_WEBKIT=false;
 const webkit=NO_WARP_ON_WEBKIT&&/AppleWebKit/.test(navigator.userAgent)&&!/(Chrome|Chromium|Edg)\//.test(navigator.userAgent);
 const fx=(id,b)=>(webkit?'':`url(#${id}) `)+`blur(${b}px)`;
 /* load every face up front, so the Work page's fonts never arrive mid-dissolve */
-if(document.fonts){['300 16px Fraunces','italic 300 16px Fraunces','400 16px Fraunces','400 16px "DM Sans"','500 16px "DM Sans"','400 13px "DM Mono"']
+if(document.fonts){['300 16px Fraunces','italic 300 16px Fraunces','400 16px Fraunces','600 16px Fraunces','400 16px "DM Sans"','500 16px "DM Sans"','400 13px "DM Mono"']
   .forEach(f=>document.fonts.load(f).catch(()=>{}));}
 /* Safari can keep stale blank tiles for content just below the first screen after a filtered transition:
    rebuild the page's layers once the dissolve ends, and again on the first scroll */
@@ -370,7 +372,7 @@ const ct=document.getElementById('contact');
 const views={home:document.querySelector('main'),work:wk,contact:ct};
 const swap=v=>{const w=v==='work',c=v==='contact';wk.hidden=!w;ct.hidden=!c;document.body.classList.toggle('work',w);document.body.classList.toggle('contact',c);shade.classList.toggle('deep',w||c);wk.scrollTop=0;lastY=0;navX=navT=0;hin.style.opacity='';hin.style.filter='';hin.classList.remove('gone');};
 /* dissolve: a view melts through warped noise (like the painting) as it fades */
-const melt=(v,from,to,dur)=>new Promise(done=>{const parts=[[views[v],'fx-'+v,110],[hdr,'fx-nav',40]];
+const melt=(v,from,to,dur)=>new Promise(done=>{const parts=[[views[v],'fx-'+v,110],[hdr,'fx-nav',40]];if(v==='work')parts.push([dots,'fx-dots',30]);
   parts.forEach(([,id])=>document.getElementById(id).querySelector('feTurbulence').setAttribute('seed',1+Math.floor(Math.random()*99)));
   const t0=performance.now();const step=now=>{const k=Math.min((now-t0)/dur,1),e=k<.5?2*k*k:1-((-2*k+2)**2)/2,x=from+(to-from)*e;
     for(const [el,id,amp] of parts){el.style.opacity=1-x;document.getElementById(id).querySelector('feDisplacementMap').setAttribute('scale',(x*amp).toFixed(1));
@@ -378,10 +380,10 @@ const melt=(v,from,to,dur)=>new Promise(done=>{const parts=[[views[v],'fx-'+v,11
     if(k<1)requestAnimationFrame(step);else done();};requestAnimationFrame(step);});
 let cur=null,want=null,busy=false;
 const show=async v=>{want=v;if(busy)return;
-  if(cur===null||reduce.matches){cur=v;swap(v);for(const el of [...Object.values(views),hdr]){el.style.opacity='';el.style.filter='';}return;}
+  if(cur===null||reduce.matches){cur=v;swap(v);for(const el of [...Object.values(views),hdr,dots]){el.style.opacity='';el.style.filter='';}return;}
   busy=true;
   while(want!==cur){const next=want;
-    await melt(cur,0,1,750);swap(next);views[next].style.opacity=0;cur=next;await melt(next,1,0,1150);repaint(views[next]);needsRepaint=next==='work';}
+    await melt(cur,0,1,750);swap(next);views[next].style.opacity=0;if(next==='work')dots.style.opacity=0;cur=next;await melt(next,1,0,1150);repaint(views[next]);needsRepaint=next==='work';}
   busy=false;};
 const route=()=>{const h=location.hash;show(h==='#experience'||h==='#work'?'work':h==='#contact'?'contact':'home');};
 document.querySelectorAll('[data-view]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const v=a.dataset.view;show(v);
