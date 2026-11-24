@@ -228,8 +228,9 @@ if(gl){
 }
 const shade=document.querySelector('.shade'),wk=document.getElementById('work');
 const hdr=document.querySelector('header');
-/* Safari/iOS (WebKit) can leave text unpainted under SVG displacement filters: there, dissolve with blur and fade only */
-const webkit=/AppleWebKit/.test(navigator.userAgent)&&!/(Chrome|Chromium|Edg)\//.test(navigator.userAgent);
+/* Marble warp everywhere. If Safari ever leaves text unpainted again, set NO_WARP_ON_WEBKIT to true. */
+const NO_WARP_ON_WEBKIT=false;
+const webkit=NO_WARP_ON_WEBKIT&&/AppleWebKit/.test(navigator.userAgent)&&!/(Chrome|Chromium|Edg)\//.test(navigator.userAgent);
 const fx=(id,b)=>(webkit?'':`url(#${id}) `)+`blur(${b}px)`;
 /* load every face up front, so the Work page's fonts never arrive mid-dissolve */
 if(document.fonts){['300 16px Fraunces','italic 300 16px Fraunces','400 16px Fraunces','400 16px "DM Sans"','500 16px "DM Sans"','400 13px "DM Mono"']
