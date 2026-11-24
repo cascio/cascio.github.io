@@ -126,6 +126,8 @@ body.work .dots{display:flex}
 .cstatus{margin:0;font-size:14px;color:var(--sage)}
 .copy{margin:0;font-size:13px;color:var(--sage);letter-spacing:.01em}
 #copyHome{position:fixed;right:max(5vw,20px);bottom:max(2vw,12px);z-index:3;line-height:44px;transition:opacity .6s ease}
+.tune{transition:opacity .6s ease}
+body.work .tune,body.contact .tune{opacity:0;visibility:hidden;pointer-events:none}
 body.work #copyHome,body.contact #copyHome{opacity:0;pointer-events:none}
 .copy-work{margin-top:56px}
 .creds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;padding-top:32px;border-top:1px solid rgba(196,222,160,.22)}
@@ -369,7 +371,7 @@ if('IntersectionObserver' in window){wk.classList.add('reveal');
 document.querySelectorAll('.yr').forEach(e=>e.textContent=new Date().getFullYear());
 const ct=document.getElementById('contact');
 const views={home:document.querySelector('main'),work:wk,contact:ct};
-const swap=v=>{const w=v==='work',c=v==='contact';wk.hidden=!w;ct.hidden=!c;document.body.classList.toggle('work',w);document.body.classList.toggle('contact',c);shade.classList.toggle('deep',w||c);wk.scrollTop=0;lastY=0;navX=navT=0;hin.style.opacity='';hin.style.filter='';hin.classList.remove('gone');};
+const swap=v=>{if(v!=='home'){const t=document.getElementById('tune');t.classList.remove('open');document.getElementById('tuneOpen').setAttribute('aria-expanded','false');}const w=v==='work',c=v==='contact';wk.hidden=!w;ct.hidden=!c;document.body.classList.toggle('work',w);document.body.classList.toggle('contact',c);shade.classList.toggle('deep',w||c);wk.scrollTop=0;lastY=0;navX=navT=0;hin.style.opacity='';hin.style.filter='';hin.classList.remove('gone');};
 /* dissolve: a view melts through warped noise (like the painting) as it fades */
 const melt=(v,from,to,dur)=>new Promise(done=>{const parts=[[views[v],'fx-'+v,110],[hdr,'fx-nav',40]];if(v==='work')parts.push([dots,'fx-dots',30]);
   parts.forEach(([,id])=>document.getElementById(id).querySelector('feTurbulence').setAttribute('seed',1+Math.floor(Math.random()*99)));
